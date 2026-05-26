@@ -1,0 +1,31 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "creation": "2025-12-03 14:20:16.215475",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Sales Order",
+ "enabled": 0,
+ "event": "Submit",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" \r\n       style=\"font-family: Arial, Helvetica, sans-serif; color:#222; line-height:1.5;\">\r\n  <tr>\r\n    <td>\r\n      <p style=\"margin:0 0 12px 0;\">Szanowni Pa\u0144stwo,</p>\r\n\r\n      <p style=\"margin:0 0 12px 0;\">\r\n        Potwierdzamy przyj\u0119cie zam\u00f3wienia do realizacji. Zesp\u00f3\u0142 rozpocz\u0105\u0142 jego obs\u0142ug\u0119.\r\n      </p>\r\n\r\n      <table cellpadding=\"6\" cellspacing=\"0\" border=\"0\" \r\n             style=\"background:#f7f7f7; border:1px solid #ddd; margin:12px 0; font-size:14px;\">\r\n        <tr>\r\n          <td><strong>Numer zam\u00f3wienia:</strong></td>\r\n          <td>{{ doc.name }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Data zam\u00f3wienia:</strong></td>\r\n          <td>{{ doc.transaction_date }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Klient:</strong></td>\r\n          <td>{{ doc.customer }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Warto\u015b\u0107 zam\u00f3wienia:</strong></td>\r\n          <td>{{ doc.grand_total }} {{ doc.currency }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Status:</strong></td>\r\n          <td>{{ doc.status }}</td>\r\n        </tr>\r\n      </table>\r\n\r\n      <p style=\"margin:0 0 18px 0;\">\r\n        W razie potrzeby skontaktujemy si\u0119 z Pa\u0144stwem w sprawie dalszych krok\u00f3w realizacji.\r\n    </td>\r\n  </tr>\r\n</table>\r\n",
+ "message_type": "HTML",
+ "modified": "2025-12-03 14:25:39.892175",
+ "modified_by": "Administrator",
+ "module": "ERPNextPL",
+ "name": "Sales order ready for fulfillment",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_role": "Stock User"
+  },
+  {
+   "receiver_by_role": "Manufacturing User"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "Potwierdzenie przyj\u0119cia zam\u00f3wienia {{ doc.name }} do realizacji"
+}

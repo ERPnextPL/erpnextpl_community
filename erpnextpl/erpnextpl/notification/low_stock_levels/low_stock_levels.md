@@ -1,0 +1,49 @@
+<table width="100%" cellpadding="0" cellspacing="0" border="0" 
+       style="font-family: Arial, Helvetica, sans-serif; color:#222; line-height:1.5;">
+  <tr>
+    <td>
+      <p style="margin:0 0 12px 0;">Szanowni Państwo,</p>
+
+      <p style="margin:0 0 12px 0;">
+        Informujemy, że poniższy artykuł osiągnął 
+        <strong>niski stan magazynowy</strong> – aktualna ilość jest 
+        <strong>poniżej wartości Minimum Stock Level</strong>:
+      </p>
+
+      <table cellpadding="6" cellspacing="0" border="0" 
+             style="background:#f7f7f7; border:1px solid #ddd; margin:12px 0; font-size:14px;">
+        <tr>
+          <td><strong>Kod produktu:</strong></td>
+          <td>{{ doc.item_code }}</td>
+        </tr>
+        <tr>
+          <td><strong>Nazwa produktu:</strong></td>
+          <td>{{ doc.item_name }}</td>
+        </tr>
+        <tr>
+          <td><strong>Magazyn:</strong></td>
+          <td>{{ doc.warehouse }}</td>
+        </tr>
+        <tr>
+          <td><strong>Aktualna ilość:</strong></td>
+          <td>{{ doc.actual_qty }}</td>
+        </tr>
+        <tr>
+          <td><strong>Minimum Stock Level:</strong></td>
+          <td>{{ doc.stock_reorder_level }}</td>
+        </tr>
+        <tr>
+          <td><strong>Różnica:</strong></td>
+          <td>
+            {{ doc.actual_qty - doc.stock_reorder_level }}
+          </td>
+        </tr>
+      </table>
+
+      <p style="margin:0 0 18px 0;">
+        Prosimy o rozważenie złożenia zamówienia u dostawcy lub 
+        zaplanowania uzupełnienia zapasów.  
+      </p>
+    </td>
+  </tr>
+</table>

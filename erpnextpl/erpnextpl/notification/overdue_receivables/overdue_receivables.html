@@ -1,0 +1,44 @@
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, Helvetica, sans-serif; color: #222; line-height: 1.5;">
+  <tr>
+    <td>
+      <div style="background: #fef2f2; border: 1px solid #fca5a5; border-radius: 10px; padding: 24px;">
+        <p style="margin: 0 0 12px 0; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #b91c1c;">ERPNextPL</p>
+        <h2 style="margin: 0 0 12px 0; font-size: 22px; line-height: 1.2; color: #7f1d1d;">Faktura sprzedaży jest przeterminowana</h2>
+        <p style="margin: 0 0 18px 0; font-size: 14px; color: #4b5563;">
+          Faktura sprzedaży <strong>{{ doc.name }}</strong> zmieniła status na <strong>Overdue</strong> i wymaga weryfikacji.
+        </p>
+
+        <table cellpadding="8" cellspacing="0" border="0" style="width: 100%; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px;">
+          <tr>
+            <td style="width: 34%; border-bottom: 1px solid #e5e7eb;"><strong>Numer faktury</strong></td>
+            <td style="border-bottom: 1px solid #e5e7eb;">{{ doc.name }}</td>
+          </tr>
+          <tr>
+            <td style="border-bottom: 1px solid #e5e7eb;"><strong>Kontrahent</strong></td>
+            <td style="border-bottom: 1px solid #e5e7eb;">{{ doc.customer }}</td>
+          </tr>
+          <tr>
+            <td style="border-bottom: 1px solid #e5e7eb;"><strong>Termin płatności</strong></td>
+            <td style="border-bottom: 1px solid #e5e7eb;">{{ doc.due_date }}</td>
+          </tr>
+          <tr>
+            <td style="border-bottom: 1px solid #e5e7eb;"><strong>Kwota zaległości</strong></td>
+            <td style="border-bottom: 1px solid #e5e7eb;">{{ doc.outstanding_amount }} {{ doc.currency }}</td>
+          </tr>
+          <tr>
+            <td><strong>Dni po terminie</strong></td>
+            <td>{{ frappe.utils.date_diff(frappe.utils.nowdate(), doc.due_date) }}</td>
+          </tr>
+        </table>
+
+        <p style="margin: 18px 0 0 0;">
+          <a href="{{ frappe.utils.get_url_to_form(doc.doctype, doc.name) }}" style="display: inline-block; background: #b91c1c; color: #fff; text-decoration: none; padding: 10px 16px; border-radius: 6px; font-size: 14px;">Otwórz fakturę</a>
+        </p>
+
+        <p style="margin: 16px 0 0 0; font-size: 13px; color: #6b7280;">
+          Jeśli płatność została już zaksięgowana, można zignorować tę wiadomość.
+        </p>
+      </div>
+    </td>
+  </tr>
+</table>

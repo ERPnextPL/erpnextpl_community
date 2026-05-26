@@ -1,0 +1,29 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "condition": "doc.stock_entry_type == \"Material Issue\" and doc.docstatus == 0",
+ "creation": "2025-12-03 13:20:01.189013",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Stock Entry",
+ "enabled": 0,
+ "event": "Submit",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" \r\n       style=\"font-family: Arial, Helvetica, sans-serif; color:#222; line-height:1.5;\">\r\n  <tr>\r\n    <td>\r\n\r\n      <p style=\"margin:0 0 12px 0;\">Szanowni Pa\u0144stwo,</p>\r\n\r\n      <p style=\"margin:0 0 12px 12px;\">\r\n        Informujemy, \u017ce poni\u017cszy dokument magazynowy posiada \r\n        <strong>oczekuj\u0105ce wydanie towaru</strong> i nie zosta\u0142 jeszcze zrealizowany.\r\n      </p>\r\n\r\n      <table cellpadding=\"6\" cellspacing=\"0\" border=\"0\" \r\n             style=\"background:#f7f7f7; border:1px solid #ddd; margin:12px 0; font-size:14px; width:100%;\">\r\n        <tr>\r\n          <td><strong>Typ dokumentu:</strong></td>\r\n          <td>{{ doc.doctype }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Numer dokumentu:</strong></td>\r\n          <td>{{ doc.name }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Data utworzenia:</strong></td>\r\n          <td>{{ doc.posting_date }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Status:</strong></td>\r\n          <td>{{ doc.status }}</td>\r\n        </tr>\r\n        {% if doc.customer %}\r\n        <tr>\r\n          <td><strong>Klient:</strong></td>\r\n          <td>{{ doc.customer }}</td>\r\n        </tr>\r\n        {% endif %}\r\n        {% if doc.purpose %}\r\n        <tr>\r\n          <td><strong>Cel dokumentu:</strong></td>\r\n          <td>{{ doc.purpose }}</td>\r\n        </tr>\r\n        {% endif %}\r\n      </table>\r\n\r\n      <p style=\"margin:16px 0 8px 0;\"><strong>Pozycje oczekuj\u0105ce na wydanie:</strong></p>\r\n\r\n      {% for item in doc.items %}\r\n      {% if item.qty != item.delivered_qty or item.delivered_qty == None %}\r\n      <table cellpadding=\"6\" cellspacing=\"0\" border=\"0\"\r\n             style=\"background:#fff; border:1px solid #ddd; margin:12px 0; font-size:14px; width:100%;\">\r\n        <tr>\r\n          <td><strong>Produkt:</strong></td>\r\n          <td>{{ item.item_code }} \u2013 {{ item.item_name }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Ilo\u015b\u0107 do wydania:</strong></td>\r\n          <td>{{ item.qty }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Ilo\u015b\u0107 ju\u017c wydana:</strong></td>\r\n          <td>{{ item.delivered_qty or 0 }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Pozosta\u0142a ilo\u015b\u0107:</strong></td>\r\n          <td>{{ item.qty - (item.delivered_qty or 0) }}</td>\r\n        </tr>\r\n      </table>\r\n      {% endif %}\r\n      {% endfor %}\r\n\r\n      <p style=\"margin:0 0 18px 0;\">\r\n        Prosimy o przygotowanie i wydanie towaru zgodnie z dokumentem.  \r\n      </p>\r\n\r\n    </td>\r\n  </tr>\r\n</table>\r\n",
+ "message_type": "HTML",
+ "modified": "2025-12-03 14:25:39.426413",
+ "modified_by": "Administrator",
+ "module": "ERPNextPL",
+ "name": "Pending releases from warehouse",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_role": "Stock User"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "{{ doc.name }} oczekuj\u0105ce wydania z magazynu"
+}

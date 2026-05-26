@@ -1,0 +1,86 @@
+<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+  <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+
+    {% set customer_name = doc.customer_name or doc.customer %}
+    {% set payment_period = doc.get("custom_okres_rozliczeniowy") %}
+    {% set service_rows = doc.items or [] %}
+    {% set payment_url = frappe.utils.get_url_to_form(doc.doctype, doc.name) %}
+
+    <h2 style="color: #2b6cb0; margin-bottom: 10px;">
+      Faktura za usługi {{ doc.name }}
+    </h2>
+
+    <p>Dzień dobry {{ customer_name }},</p>
+
+    <p>
+      W systemie <b>{{ company_name }}</b> została wystawiona nowa <strong>faktura za usługi nr {{ doc.name }}</strong>.
+    </p>
+
+    {% if payment_period %}
+    <p>
+      Okres rozliczeniowy:
+      <strong>{{ payment_period }}</strong>
+    </p>
+    {% endif %}
+
+    <br>
+    <p>
+      <strong>Kwota do zapłaty:</strong> {{ doc.grand_total }} {{ doc.currency }}<br>
+      <strong>Termin płatności:</strong> {{ doc.due_date or "-" }}<br>
+      <strong>Data wystawienia:</strong> {{ doc.posting_date or "-" }}
+    </p>
+
+    <p>
+      Dokument można otworzyć tutaj:
+      <a href="{{ payment_url }}" style="color: #2b6cb0; text-decoration: none; border-bottom: 1px dotted #2b6cb0;">{{ payment_url }}</a>
+    </p>
+
+    {% if service_rows %}
+    <br>
+    <h3 style="color: #2b6cb0;">Pozycje na fakturze:</h3>
+    <table cellpadding="8" cellspacing="0" border="0" style="width: 100%; border-collapse: collapse; font-size: 14px;">
+      <thead>
+        <tr style="background: #f3f4f6;">
+          <th align="left" style="border: 1px solid #e5e7eb;">Usługa</th>
+          <th align="right" style="border: 1px solid #e5e7eb;">Ilość</th>
+          <th align="right" style="border: 1px solid #e5e7eb;">Cena</th>
+          <th align="right" style="border: 1px solid #e5e7eb;">Wartość</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in service_rows %}
+        <tr>
+          <td style="border: 1px solid #e5e7eb;">
+            {{ row.item_name or row.item_code or "-" }}
+            {% if row.description %}
+            <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">{{ row.description }}</div>
+            {% endif %}
+          </td>
+          <td align="right" style="border: 1px solid #e5e7eb;">{{ row.qty or "-" }}</td>
+          <td align="right" style="border: 1px solid #e5e7eb;">{{ row.rate or "-" }} {{ doc.currency }}</td>
+          <td align="right" style="border: 1px solid #e5e7eb;">{{ row.amount or "-" }} {{ doc.currency }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+
+    {% if bank_account_name %}
+    <br>
+    <h3 style="color: #2b6cb0;">Dane do przelewu:</h3>
+    <p>
+      <strong>{{ company_name }}</strong><br>
+      NIP: {{ company_info.get("tax_id") or "-" }}<br>
+      Bank: {{ bank.get("bank_name") or bank_account.get("bank") or "-" }}<br>
+      Numer konta: {{ bank_account.get("bank_account_no") or "-" }}<br>
+      IBAN: {{ bank_account.get("iban") or "-" }}<br>
+      SWIFT: {{ bank.get("swift_number") or "-" }}<br>
+      <strong>Tytuł przelewu:</strong> {{ doc.name }}
+    </p>
+    {% endif %}
+
+    <br>
+
+    <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
+  </div>
+</div>

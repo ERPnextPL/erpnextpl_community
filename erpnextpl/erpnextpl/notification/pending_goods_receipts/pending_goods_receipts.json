@@ -1,0 +1,29 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "condition": "doc.status == \"To Receive and Bill\" and doc.expected_delivery_date and date_diff(nowdate(), doc.expected_delivery_date) > 0",
+ "creation": "2025-12-03 13:19:28.531154",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Purchase Order",
+ "enabled": 0,
+ "event": "Submit",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" \r\n       style=\"font-family: Arial, Helvetica, sans-serif; color:#222; line-height:1.5;\">\r\n  <tr>\r\n    <td>\r\n\r\n      <p style=\"margin:0 0 12px 0;\">Szanowni Pa\u0144stwo,</p>\r\n\r\n      <p style=\"margin:0 0 12px 0;\">\r\n        Informujemy, \u017ce poni\u017csze <strong>zam\u00f3wienie zakupu</strong> posiada \r\n        <strong>oczekuj\u0105ce przyj\u0119cie towaru</strong>.\r\n      </p>\r\n\r\n      <table cellpadding=\"6\" cellspacing=\"0\" border=\"0\" \r\n             style=\"background:#f7f7f7; border:1px solid #ddd; margin:12px 0; font-size:14px;\">\r\n        <tr>\r\n          <td><strong>Numer zam\u00f3wienia zakupu:</strong></td>\r\n          <td>{{ doc.name }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Dostawca:</strong></td>\r\n          <td>{{ doc.supplier }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Data zam\u00f3wienia:</strong></td>\r\n          <td>{{ doc.transaction_date }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Planowana data dostawy:</strong></td>\r\n          <td>{{ doc.schedule_date }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Status:</strong></td>\r\n          <td>{{ doc.status }}</td>\r\n        </tr>\r\n      </table>\r\n\r\n      <p style=\"margin:16px 0 8px 0;\"><strong>Pozycje oczekuj\u0105ce na przyj\u0119cie:</strong></p>\r\n\r\n      <!-- Je\u015bli chcesz iteracj\u0119 po pozycjach w ERPNext -->\r\n      {% for item in doc.items %}\r\n      <table cellpadding=\"6\" cellspacing=\"0\" border=\"0\"\r\n             style=\"background:#fff; border:1px solid #ddd; margin:12px 0; font-size:14px;\">\r\n        <tr>\r\n          <td><strong>Produkt:</strong></td>\r\n          <td>{{ item.item_code }} \u2013 {{ item.item_name }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Zam\u00f3wiona ilo\u015b\u0107:</strong></td>\r\n          <td>{{ item.qty }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Ilo\u015b\u0107 ju\u017c odebrana:</strong></td>\r\n          <td>{{ item.received_qty }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td><strong>Pozosta\u0142a do przyj\u0119cia:</strong></td>\r\n          <td>{{ item.qty - item.received_qty }}</td>\r\n        </tr>\r\n      </table>\r\n      {% endfor %}\r\n\r\n      <p style=\"margin:0 0 18px 0;\">\r\n        Prosimy o weryfikacj\u0119 statusu dostawy, kontakt z dostawc\u0105 lub przygotowanie magazynu do przyj\u0119cia towaru.  \r\n      </p>\r\n\r\n    </td>\r\n  </tr>\r\n</table>\r\n",
+ "message_type": "HTML",
+ "modified": "2025-12-03 14:25:39.591285",
+ "modified_by": "Administrator",
+ "module": "ERPNextPL",
+ "name": "Pending goods receipts",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_role": "Stock User"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "Oczekuj\u0105ce przyj\u0119cia towaru {{ doc.name }}"
+}

@@ -1,0 +1,40 @@
+<table width="100%" cellpadding="0" cellspacing="0" border="0" 
+       style="font-family: Arial, Helvetica, sans-serif; color:#222; line-height:1.5;">
+  <tr>
+    <td>
+      <p style="margin:0 0 12px 0;">Szanowni Państwo,</p>
+
+      <p style="margin:0 0 12px 0;">
+        Informujemy, że poniższe <strong>zamówienie klienta posiada opóźnienie w dostawie</strong> 
+        względem planowanego terminu.
+      </p>
+
+      <table cellpadding="6" cellspacing="0" border="0" 
+             style="background:#f7f7f7; border:1px solid #ddd; margin:12px 0; font-size:14px;">
+        <tr>
+          <td><strong>Numer zamówienia:</strong></td>
+          <td>{{ doc.name }}</td>
+        </tr>
+        <tr>
+          <td><strong>Klient:</strong></td>
+          <td>{{ doc.customer }}</td>
+        </tr>
+        <tr>
+          <td><strong>Planowana data dostawy:</strong></td>
+          <td>{{ doc.delivery_date }}</td>
+        </tr>
+        <tr>
+          <td><strong>Dzisiejsza data:</strong></td>
+          <td>{{ frappe.utils.nowdate() }}</td>
+        </tr>
+        <tr>
+          <td><strong>Opóźnienie:</strong></td>
+          <td>{{ frappe.utils.date_diff(frappe.utils.nowdate(), doc.delivery_date) }} dni</td>
+        </tr>
+      </table>
+
+      <p style="margin:0 0 18px 0;">
+        Prosimy o pilne podjęcie działań w celu realizacji dostawy lub kontaktu z klientem.
+    </td>
+  </tr>
+</table>

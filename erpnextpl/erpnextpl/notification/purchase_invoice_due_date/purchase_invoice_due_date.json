@@ -1,0 +1,29 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "creation": "2025-05-15 00:00:00.000000",
+ "date_changed": "due_date",
+ "days_in_advance": 2,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Purchase Invoice",
+ "enabled": 0,
+ "event": "Days Before",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-family: Arial, Helvetica, sans-serif; color: #222; line-height: 1.5;\">\n  <tr>\n    <td>\n      <div style=\"background: #eff6ff; border: 1px solid #93c5fd; border-radius: 10px; padding: 24px;\">\n        <p style=\"margin: 0 0 12px 0; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #1d4ed8;\">ERPNextPL</p>\n        <h2 style=\"margin: 0 0 12px 0; font-size: 22px; line-height: 1.2; color: #1e3a8a;\">Zbliża się termin płatności faktury zakupu</h2>\n        <p style=\"margin: 0 0 18px 0; font-size: 14px; color: #475569;\">\n          Faktura zakupu <strong>{{ doc.name }}</strong> wymaga przygotowania do płatności przed terminem.\n        </p>\n\n        <table cellpadding=\"8\" cellspacing=\"0\" border=\"0\" style=\"width: 100%; background: #fff; border: 1px solid #dbeafe; border-radius: 8px; font-size: 14px;\">\n          <tr>\n            <td style=\"width: 34%; border-bottom: 1px solid #dbeafe;\"><strong>Numer faktury</strong></td>\n            <td style=\"border-bottom: 1px solid #dbeafe;\">{{ doc.name }}</td>\n          </tr>\n          <tr>\n            <td style=\"border-bottom: 1px solid #dbeafe;\"><strong>Dostawca</strong></td>\n            <td style=\"border-bottom: 1px solid #dbeafe;\">{{ doc.supplier }}</td>\n          </tr>\n          <tr>\n            <td style=\"border-bottom: 1px solid #dbeafe;\"><strong>Termin płatności</strong></td>\n            <td style=\"border-bottom: 1px solid #dbeafe;\">{{ doc.due_date }}</td>\n          </tr>\n          <tr>\n            <td style=\"border-bottom: 1px solid #dbeafe;\"><strong>Kwota do zapłaty</strong></td>\n            <td style=\"border-bottom: 1px solid #dbeafe;\">{{ doc.outstanding_amount }} {{ doc.currency }}</td>\n          </tr>\n          <tr>\n            <td><strong>Dni do terminu</strong></td>\n            <td>{{ frappe.utils.date_diff(doc.due_date, frappe.utils.nowdate()) }}</td>\n          </tr>\n        </table>\n\n        <p style=\"margin: 18px 0 0 0;\">\n          <a href=\"{{ frappe.utils.get_url_to_form(doc.doctype, doc.name) }}\" style=\"display: inline-block; background: #1d4ed8; color: #fff; text-decoration: none; padding: 10px 16px; border-radius: 6px; font-size: 14px;\">Otwórz fakturę</a>\n        </p>\n      </div>\n    </td>\n  </tr>\n</table>\n",
+ "message_type": "HTML",
+ "modified": "2025-05-15 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "ERPNextPL",
+ "name": "Purchase Invoice due date",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_role": "Accounts User"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "Zbliża się termin płatności faktury zakupu {{ doc.name }}"
+}
