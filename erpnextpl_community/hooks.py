@@ -1,4 +1,4 @@
-app_name = "erpnextpl"
+app_name = "erpnextpl_community"
 app_title = "ERPNextPL"
 app_publisher = "ERPTECH sp. z o.o."
 app_description = "ERPNextPL"
@@ -11,15 +11,15 @@ export_python_type_annotations = True
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/erpnextpl/css/erpnextpl.css"
-app_include_js = "/assets/erpnextpl/js/erpnextpl_fixes.js"
+# app_include_css = "/assets/erpnextpl_community/css/erpnextpl.css"
+app_include_js = "/assets/erpnextpl_community/js/erpnextpl_fixes.js"
 
 # include js, css files in header of web template
-# web_include_css = "/assets/erpnextpl/css/erpnextpl.css"
-# web_include_js = "/assets/erpnextpl/js/erpnextpl.js"
+# web_include_css = "/assets/erpnextpl_community/css/erpnextpl.css"
+# web_include_js = "/assets/erpnextpl_community/js/erpnextpl.js"
 
 # include custom scss in every website theme (without file extension ".scss")
-# website_theme_scss = "erpnextpl/public/scss/website"
+# website_theme_scss = "erpnextpl_community/public/scss/website"
 
 # include js, css files in header of web form
 # webform_include_js = {"doctype": "public/js/doctype.js"}
@@ -37,7 +37,7 @@ app_include_js = "/assets/erpnextpl/js/erpnextpl_fixes.js"
 # Svg Icons
 # ------------------
 # include app icons in desk
-# app_include_icons = "erpnextpl/public/icons.svg"
+# app_include_icons = "erpnextpl_community/public/icons.svg"
 
 # Home Pages
 # ----------
@@ -61,43 +61,43 @@ app_include_js = "/assets/erpnextpl/js/erpnextpl_fixes.js"
 
 # add methods and filters to jinja environment
 # jinja = {
-# 	"methods": "erpnextpl.utils.jinja_methods",
-# 	"filters": "erpnextpl.utils.jinja_filters"
+# 	"methods": "erpnextpl_community.utils.jinja_methods",
+# 	"filters": "erpnextpl_community.utils.jinja_filters"
 # }
 
 # Installation
 # ------------
 
-# before_install = "erpnextpl.install.before_install"
-# after_install = "erpnextpl.install.after_install"
+# before_install = "erpnextpl_community.install.before_install"
+# after_install = "erpnextpl_community.install.after_install"
 
 # Uninstallation
 # ------------
 
-# before_uninstall = "erpnextpl.uninstall.before_uninstall"
-# after_uninstall = "erpnextpl.uninstall.after_uninstall"
+# before_uninstall = "erpnextpl_community.uninstall.before_uninstall"
+# after_uninstall = "erpnextpl_community.uninstall.after_uninstall"
 
 # Integration Setup
 # ------------------
 # To set up dependencies/integrations with other apps
 # Name of the app being installed is passed as an argument
 
-# before_app_install = "erpnextpl.utils.before_app_install"
-# after_app_install = "erpnextpl.utils.after_app_install"
+# before_app_install = "erpnextpl_community.utils.before_app_install"
+# after_app_install = "erpnextpl_community.utils.after_app_install"
 
 # Integration Cleanup
 # -------------------
 # To clean up dependencies/integrations with other apps
 # Name of the app being uninstalled is passed as an argument
 
-# before_app_uninstall = "erpnextpl.utils.before_app_uninstall"
-# after_app_uninstall = "erpnextpl.utils.after_app_uninstall"
+# before_app_uninstall = "erpnextpl_community.utils.before_app_uninstall"
+# after_app_uninstall = "erpnextpl_community.utils.after_app_uninstall"
 
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
 
-# notification_config = "erpnextpl.notifications.get_notification_config"
+# notification_config = "erpnextpl_community.notifications.get_notification_config"
 
 # Permissions
 # -----------
@@ -122,10 +122,10 @@ app_include_js = "/assets/erpnextpl/js/erpnextpl_fixes.js"
 
 doc_events = {
 	"Sales Invoice": {
-		"validate": "erpnextpl.sales_invoice.validate_sales_invoice",
+		"validate": "erpnextpl_community.sales_invoice.validate_sales_invoice",
 	},
 	"Customer": {
-		"validate": "erpnextpl.customer.validate_customer",
+		"validate": "erpnextpl_community.customer.validate_customer",
 	},
 }
 
@@ -134,39 +134,39 @@ doc_events = {
 
 # scheduler_events = {
 # 	"all": [
-# 		"erpnextpl.tasks.all"
+# 		"erpnextpl_community.tasks.all"
 # 	],
 # 	"daily": [
-# 		"erpnextpl.tasks.daily"
+# 		"erpnextpl_community.tasks.daily"
 # 	],
 # 	"hourly": [
-# 		"erpnextpl.tasks.hourly"
+# 		"erpnextpl_community.tasks.hourly"
 # 	],
 # 	"weekly": [
-# 		"erpnextpl.tasks.weekly"
+# 		"erpnextpl_community.tasks.weekly"
 # 	],
 # 	"monthly": [
-# 		"erpnextpl.tasks.monthly"
+# 		"erpnextpl_community.tasks.monthly"
 # 	],
 # }
 
 # Testing
 # -------
 
-# before_tests = "erpnextpl.install.before_tests"
+# before_tests = "erpnextpl_community.install.before_tests"
 
 # Overriding Methods
 # ------------------------------
 #
 # override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "erpnextpl.event.get_events"
+# 	"frappe.desk.doctype.event.event.get_events": "erpnextpl_community.event.get_events"
 # }
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
 # override_doctype_dashboards = {
-# 	"Task": "erpnextpl.task.get_dashboard_data"
+# 	"Task": "erpnextpl_community.task.get_dashboard_data"
 # }
 
 # exempt linked doctypes from being automatically cancelled
@@ -180,13 +180,13 @@ doc_events = {
 
 # Request Events
 # ----------------
-# before_request = ["erpnextpl.utils.before_request"]
-# after_request = ["erpnextpl.utils.after_request"]
+# before_request = ["erpnextpl_community.utils.before_request"]
+# after_request = ["erpnextpl_community.utils.after_request"]
 
 # Job Events
 # ----------
-# before_job = ["erpnextpl.utils.before_job"]
-# after_job = ["erpnextpl.utils.after_job"]
+# before_job = ["erpnextpl_community.utils.before_job"]
+# after_job = ["erpnextpl_community.utils.after_job"]
 
 # User Data Protection
 # --------------------
@@ -216,7 +216,7 @@ doc_events = {
 # --------------------------------
 
 # auth_hooks = [
-# 	"erpnextpl.auth.validate"
+# 	"erpnextpl_community.auth.validate"
 # ]
 
 # Automatically update python controller files with type annotations for this app.

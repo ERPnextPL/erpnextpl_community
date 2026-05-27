@@ -101,7 +101,7 @@ def create_custom_fields() -> None:
 
 
 def create_standard_documents() -> None:
-	app_path = Path(frappe.get_app_path("erpnextpl"))
+	app_path = Path(frappe.get_app_path("erpnextpl_community"))
 
 	for relative_path in STANDARD_DOCUMENTS:
 		data = json.loads((app_path / relative_path).read_text(encoding="utf-8"))
