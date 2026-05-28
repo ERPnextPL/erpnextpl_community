@@ -8,7 +8,7 @@ on:
   pull_request:
 
 concurrency:
-  group: develop-erpnextpl-${{ github.event.number }}
+  group: develop-erpnextpl_community-${{ github.event.number }}
   cancel-in-progress: true
 
 jobs:
@@ -94,11 +94,11 @@ jobs:
         run: |
           /home/runner/frappe-bench/env/bin/python -m pip install --upgrade setuptools
           bench get-app erpnext --branch version-15
-          bench get-app erpnextpl $GITHUB_WORKSPACE
+          bench get-app erpnextpl_community $GITHUB_WORKSPACE
           bench setup requirements --dev
           bench new-site --db-root-password root --admin-password admin test_site
           bench --site test_site install-app erpnext
-          bench --site test_site install-app erpnextpl
+          bench --site test_site install-app erpnextpl_community
           bench build
         env:
           CI: 'Yes'
@@ -107,6 +107,6 @@ jobs:
         working-directory: /home/runner/frappe-bench
         run: |
           bench --site test_site set-config allow_tests true
-          bench --site test_site run-tests --app erpnextpl
+          bench --site test_site run-tests --app erpnextpl_community
         env:
           TYPE: server

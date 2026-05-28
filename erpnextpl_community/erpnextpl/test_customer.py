@@ -10,8 +10,8 @@ _frappe_stub._ = lambda x: x
 sys.modules.setdefault("frappe", _frappe_stub)
 
 # Upewniamy się, że moduł customer jest przeładowany ze stubem frappe
-if "erpnextpl.customer" in sys.modules:
-	del sys.modules["erpnextpl.customer"]
+if "erpnextpl_community.customer" in sys.modules:
+	del sys.modules["erpnextpl_community.customer"]
 
 
 def _make_customer(territory="Poland", customer_type="Company", tax_id=""):
@@ -29,7 +29,7 @@ class TestValidateNip(unittest.TestCase):
 		frappe.msgprint = MagicMock()
 
 	def _validate(self, **kwargs):
-		from erpnextpl.customer import validate_nip
+		from erpnextpl_community.customer import validate_nip
 
 		validate_nip(_make_customer(**kwargs))
 

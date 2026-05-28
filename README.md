@@ -42,7 +42,7 @@ Aplikacja obsługuje podstawowe wartości i walidacje faktury sprzedaży:
 
 ## Szablony i powiadomienia
 
-Szablony e-mail, szablony faktur i powiadomienia są tworzone przez patch `erpnextpl.erpnextpl.patches.create_community_documents`.
+Szablony e-mail, szablony faktur i powiadomienia są tworzone przez patch `erpnextpl_community.erpnextpl.patches.create_community_documents`.
 
 Patch działa według zasady:
 
@@ -54,19 +54,19 @@ To podejście chroni lokalne modyfikacje szablonów przed nadpisaniem przy `benc
 
 ## Najważniejsze pliki
 
-- `erpnextpl/hooks.py` - aktywne hooki aplikacji,
-- `erpnextpl/customer.py` - walidacja NIP klienta,
-- `erpnextpl/sales_invoice.py` - walidacje i wartości domyślne faktury sprzedaży,
-- `erpnextpl/public/js/erpnextpl_fixes.js` - komunikaty podstawowych pól w UI,
-- `erpnextpl/erpnextpl/patches/create_community_documents.py` - tworzenie pól, szablonów i powiadomień,
-- `erpnextpl/erpnextpl/patches/remove_pro_artifacts.py` - sprzątanie artefaktów spoza zakresu Community.
+- `erpnextpl_community/hooks.py` - aktywne hooki aplikacji,
+- `erpnextpl_community/customer.py` - walidacja NIP klienta,
+- `erpnextpl_community/sales_invoice.py` - walidacje i wartości domyślne faktury sprzedaży,
+- `erpnextpl_community/public/js/erpnextpl_fixes.js` - komunikaty podstawowych pól w UI,
+- `erpnextpl_community/erpnextpl/patches/create_community_documents.py` - tworzenie pól, szablonów i powiadomień,
+- `erpnextpl_community/erpnextpl/patches/remove_pro_artifacts.py` - sprzątanie artefaktów spoza zakresu Community.
 
 ## Instalacja
 
 ```bash
 cd $PATH_TO_YOUR_BENCH
 bench get-app $URL_OF_THIS_REPO --branch develop
-bench install-app erpnextpl
+bench install-app erpnextpl_community
 bench --site $SITE_NAME migrate
 ```
 
@@ -77,6 +77,12 @@ Przed zmianami w aktywnym zakresie warto uruchomić testy dotyczące:
 - walidacji klienta,
 - walidacji faktury sprzedaży,
 - patcha tworzącego dokumenty Community.
+
+## TODO
+
+- faktura proforma,
+- lista banków polskich + swift,
+- lista województw w Polsce.
 
 ## Licencja
 
