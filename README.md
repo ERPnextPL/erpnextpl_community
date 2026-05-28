@@ -52,6 +52,11 @@ Patch działa według zasady:
 
 To podejście chroni lokalne modyfikacje szablonów przed nadpisaniem przy `bench migrate`.
 
+Szablony e-mail w tej aplikacji mają polskie nazwy:
+
+- `Przypomnienie o zaległych płatnościach`,
+- `Powiadomienie o fakturze za usługi`.
+
 ## Najważniejsze pliki
 
 - `erpnextpl_community/hooks.py` - aktywne hooki aplikacji,

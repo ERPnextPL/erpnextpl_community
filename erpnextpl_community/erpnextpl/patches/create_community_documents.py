@@ -105,7 +105,24 @@ def create_standard_documents() -> None:
 
 	for relative_path in STANDARD_DOCUMENTS:
 		data = json.loads((app_path / relative_path).read_text(encoding="utf-8"))
+		if data["doctype"] == "Print Format" and data["name"] == "Faktura VAT":
+			data["html"] = data["html"].replace(
+				"doc.in_words or money_in_words(gross_total, doc.currency)",
+				"doc.in_words or frappe.utils.money_in_words(gross_total, doc.currency)",
+			)
+
 		if frappe.db.exists(data["doctype"], data["name"]):
+			if data["doctype"] == "Print Format" and data["name"] == "Faktura VAT":
+				print_format_html = frappe.db.get_value("Print Format", data["name"], "html")
+				if print_format_html != data["html"]:
+					frappe.db.sql(
+						"""
+						UPDATE `tabPrint Format`
+						SET html = %s, modified = NOW(), modified_by = %s
+						WHERE name = %s
+						""",
+						(data["html"], frappe.session.user, data["name"]),
+					)
 			continue
 
 		if data["doctype"] == "Notification":
