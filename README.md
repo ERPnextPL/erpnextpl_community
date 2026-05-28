@@ -78,6 +78,12 @@ Przed zmianami w aktywnym zakresie warto uruchomić testy dotyczące:
 - walidacji faktury sprzedaży,
 - patcha tworzącego dokumenty Community.
 
+## TODO
+
+- faktura proforma,
+- lista banków polskich + swift,
+- lista województw w Polsce.
+
 ## Licencja
 
 MIT
