@@ -89,6 +89,15 @@ Przed zmianami w aktywnym zakresie warto uruchomić testy dotyczące:
 - lista banków polskich + swift,
 - lista województw w Polsce.
 
+## Privacy
+
+ERPNextPL Community działa wewnątrz lokalnej instancji Frappe / ERPNext.
+
+- aplikacja nie wysyła danych do zewnętrznych usług ERPNextPL Community,
+- aplikacja nie dodaje telemetrii ani analityki,
+- dane dokumentów pozostają w bazie danych site Frappe / ERPNext,
+- szablony e-mail i powiadomienia korzystają wyłącznie z konfiguracji poczty ustawionej przez administratora site.
+
 ## Licencja
 
 MIT
