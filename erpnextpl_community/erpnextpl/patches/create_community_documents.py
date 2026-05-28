@@ -75,6 +75,21 @@ STANDARD_DOCUMENTS = [
 	"erpnextpl/notification/todo_assigned/todo_assigned.json",
 ]
 
+FAKTURA_VAT_HTML_REPLACEMENTS = (
+	(
+		"{{ frappe.utils.fmt_float(row.qty, 2) }}",
+		"{{ (row.qty or 0) | round(2) }}",
+	),
+	(
+		"doc.in_words or money_in_words(gross_total, doc.currency)",
+		"doc.in_words or frappe.utils.money_in_words(gross_total, doc.currency)",
+	),
+	(
+		"doc.in_words or frappe.utils.frappe.utils.money_in_words(gross_total, doc.currency)",
+		"doc.in_words or frappe.utils.money_in_words(gross_total, doc.currency)",
+	),
+)
+
 
 def execute():
 	create_custom_fields()
@@ -105,7 +120,10 @@ def create_standard_documents() -> None:
 
 	for relative_path in STANDARD_DOCUMENTS:
 		data = json.loads((app_path / relative_path).read_text(encoding="utf-8"))
+
 		if frappe.db.exists(data["doctype"], data["name"]):
+			if data["doctype"] == "Print Format" and data["name"] == "Faktura VAT":
+				migrate_faktura_vat_html(data["name"])
 			continue
 
 		if data["doctype"] == "Notification":
@@ -117,3 +135,18 @@ def create_standard_documents() -> None:
 			ignore_mandatory=True,
 			ignore_if_duplicate=True,
 		)
+
+
+def migrate_faktura_vat_html(print_format_name: str) -> None:
+	print_format_html = frappe.db.get_value("Print Format", print_format_name, "html") or ""
+	migrated_html = apply_faktura_vat_html_replacements(print_format_html)
+
+	if migrated_html != print_format_html:
+		frappe.db.set_value("Print Format", print_format_name, "html", migrated_html)
+
+
+def apply_faktura_vat_html_replacements(html: str) -> str:
+	for old, new in FAKTURA_VAT_HTML_REPLACEMENTS:
+		html = html.replace(old, new)
+
+	return html
