@@ -93,7 +93,7 @@ def create_custom_fields() -> None:
 					"doctype": "Custom Field",
 					"dt": doctype,
 					"name": name,
-					"module": "erpnextpl",
+					"module": "ERPNextPL",
 					**field,
 				}
 			)
