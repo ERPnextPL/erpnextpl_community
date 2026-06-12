@@ -1,0 +1,29 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "creation": "2026-05-21 00:00:00.000000",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Sales Invoice",
+ "enabled": 0,
+ "event": "Submit",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "",
+ "message_type": "HTML",
+ "modified": "2026-05-28 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "ERPNextPL Community",
+ "name": "Sales invoice notification",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "contact_email"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "Faktura za usługi {{ doc.name }} od {{ doc.company }}",
+ "condition": "doc.contact_email"
+}

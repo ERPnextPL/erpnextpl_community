@@ -1,0 +1,30 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "condition": "doc.status == \"Pending\" and date_diff(nowdate(), doc.creation) > 6",
+ "creation": "2025-12-03 14:21:58.108758",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Delivery Note",
+ "enabled": 0,
+ "event": "Value Change",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" \n       style=\"font-family: Arial, Helvetica, sans-serif; color:#222; line-height:1.5;\">\n  <tr>\n    <td>\n      <p style=\"margin:0 0 12px 0;\">Szanowni Pa\u0144stwo,</p>\n\n      <p style=\"margin:0 0 12px 0;\">\n        Informujemy, \u017ce poni\u017csze <strong>zam\u00f3wienie klienta posiada op\u00f3\u017anienie w dostawie</strong> \n        wzgl\u0119dem planowanego terminu.\n      </p>\n\n      <table cellpadding=\"6\" cellspacing=\"0\" border=\"0\" \n             style=\"background:#f7f7f7; border:1px solid #ddd; margin:12px 0; font-size:14px;\">\n        <tr>\n          <td><strong>Numer zam\u00f3wienia:</strong></td>\n          <td>{{ doc.name }}</td>\n        </tr>\n        <tr>\n          <td><strong>Klient:</strong></td>\n          <td>{{ doc.customer }}</td>\n        </tr>\n        <tr>\n          <td><strong>Planowana data dostawy:</strong></td>\n          <td>{{ doc.delivery_date }}</td>\n        </tr>\n        <tr>\n          <td><strong>Dzisiejsza data:</strong></td>\n          <td>{{ frappe.utils.nowdate() }}</td>\n        </tr>\n        <tr>\n          <td><strong>Op\u00f3\u017anienie:</strong></td>\n          <td>{{ frappe.utils.date_diff(frappe.utils.nowdate(), doc.delivery_date) }} dni</td>\n        </tr>\n      </table>\n\n<pre><code>  &lt;p style=\"margin:0 0 18px 0;\"&gt;\n    Prosimy o pilne podj\u0119cie dzia\u0142a\u0144 w celu realizacji dostawy lub kontaktu z klientem.\n&lt;/td&gt;\n</code></pre>\n\n<p></tr>\n</table></p>\n",
+ "message_type": "HTML",
+ "modified": "2025-12-03 14:25:39.779665",
+ "modified_by": "Administrator",
+ "module": "ERPNextPL Community",
+ "name": "Delayed deliveries of to customers",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_role": "Sales User"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "Op\u00f3\u017anione dostawy {{ doc.name }} do klient\u00f3w",
+ "value_changed": "status"
+}
