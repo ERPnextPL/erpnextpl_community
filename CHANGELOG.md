@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   section (`REGON`, `KRS`, `PESEL`, `VAT Tax Status`) previously available only on
   `Customer` is now also added to `Supplier` and `Company` (#4). On `Supplier`,
   REGON/KRS are shown for companies and PESEL for individuals, same as on `Customer`.
+  On `Company` all fields are always visible (Company has no party type field).
 
 ### Changed
 - CI now tests against Frappe / ERPNext `version-16` (Python 3.14, Node 24,

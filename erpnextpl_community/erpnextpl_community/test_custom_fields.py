@@ -40,6 +40,23 @@ class TestPolishTaxFields(unittest.TestCase):
 				fieldnames = [field["fieldname"] for field in CUSTOM_FIELDS[doctype]]
 				self.assertEqual(fieldnames, POLISH_TAX_FIELDNAMES)
 
+	def test_field_types_and_labels(self):
+		"""Typy pól i etykiety są takie same dla wszystkich DocType."""
+		expected = {
+			"polish_tax_ids_section": ("Section Break", "Polish Tax Identifiers"),
+			"regon": ("Data", "REGON"),
+			"krs": ("Data", "KRS"),
+			"pesel": ("Data", "PESEL"),
+			"column_break_polish_tax": ("Column Break", None),
+			"vat_tax_status": ("Data", "VAT Tax Status"),
+		}
+		for doctype in ("Customer", "Supplier", "Company"):
+			fields = _fields_by_name(doctype)
+			for fieldname, (fieldtype, label) in expected.items():
+				with self.subTest(doctype=doctype, field=fieldname):
+					self.assertEqual(fields[fieldname]["fieldtype"], fieldtype)
+					self.assertEqual(fields[fieldname].get("label"), label)
+
 	def test_section_placement(self):
 		"""Sekcja jest wstawiana w odpowiednim miejscu formularza."""
 		expected = {

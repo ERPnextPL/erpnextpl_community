@@ -123,7 +123,7 @@ def create_custom_fields(doctypes: list[str] | None = None) -> None:
 
 		for field in fields:
 			name = f"{doctype}-{field['fieldname']}"
-			if frappe.db.exists("Custom Field", name):
+			if frappe.db.exists("Custom Field", {"dt": doctype, "fieldname": field["fieldname"]}):
 				continue
 
 			doc = frappe.get_doc(
