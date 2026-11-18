@@ -115,8 +115,12 @@ def execute():
 	create_standard_documents()
 
 
-def create_custom_fields() -> None:
+def create_custom_fields(doctypes: list[str] | None = None) -> None:
+	"""Create missing Custom Fields, optionally only for the given doctypes."""
 	for doctype, fields in CUSTOM_FIELDS.items():
+		if doctypes is not None and doctype not in doctypes:
+			continue
+
 		for field in fields:
 			name = f"{doctype}-{field['fieldname']}"
 			if frappe.db.exists("Custom Field", name):

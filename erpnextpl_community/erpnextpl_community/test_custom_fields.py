@@ -2,7 +2,7 @@ import sys
 import types
 import unittest
 from itertools import pairwise
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 # Frappe nie jest dostępne poza środowiskiem bench — tworzymy stub modułu
 _frappe_stub = types.ModuleType("frappe")
@@ -10,6 +10,10 @@ _frappe_stub.msgprint = MagicMock()
 _frappe_stub._ = lambda x: x
 sys.modules.setdefault("frappe", _frappe_stub)
 
+from erpnextpl_community.erpnextpl_community.patches import (
+	add_polish_tax_fields_to_supplier_and_company,
+	create_community_documents,
+)
 from erpnextpl_community.erpnextpl_community.patches.create_community_documents import (
 	CUSTOM_FIELDS,
 )
@@ -73,6 +77,19 @@ class TestPolishTaxFields(unittest.TestCase):
 		for field in CUSTOM_FIELDS["Company"]:
 			with self.subTest(field=field["fieldname"]):
 				self.assertNotIn("depends_on", field)
+
+
+class TestAddPolishTaxFieldsPatch(unittest.TestCase):
+	def test_patch_only_touches_supplier_and_company(self):
+		"""Patch nie przywraca pól usuniętych z innych DocType (np. Customer)."""
+		frappe_mock = MagicMock()
+		frappe_mock.db.exists.return_value = False
+
+		with patch.object(create_community_documents, "frappe", frappe_mock):
+			add_polish_tax_fields_to_supplier_and_company.execute()
+
+		created_doctypes = {call.args[0]["dt"] for call in frappe_mock.get_doc.call_args_list}
+		self.assertEqual(created_doctypes, {"Supplier", "Company"})
 
 
 if __name__ == "__main__":
