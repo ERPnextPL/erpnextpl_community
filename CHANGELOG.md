@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `Customer` is now also added to `Supplier` and `Company` (#4). On `Supplier`,
   REGON/KRS are shown for companies and PESEL for individuals, same as on `Customer`.
 
+### Changed
+- CI now tests against Frappe / ERPNext `version-16` (Python 3.14, Node 24,
+  MariaDB 11.8) instead of `version-15`.
+
 ### Migration notes
 - New idempotent patch `add_polish_tax_fields_to_supplier_and_company` adds the
   fields on existing sites during `bench migrate`. Custom Fields that already exist
