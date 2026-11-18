@@ -13,11 +13,13 @@ ERPNextPL Community to lekka aplikacja dla Frappe / ERPNext. Zakres tej edycji o
 
 ## Custom Fields
 
-Aplikacja dodaje pola przez patch migracyjny, tylko jeśli ich jeszcze nie ma. Nie używa plików `custom/*.json`, dzięki czemu `bench migrate` nie nadpisuje lokalnych zmian formularzy.
+Aplikacja dodaje pola przy instalacji (hook `after_install`) i przez patche migracyjne, tylko jeśli ich jeszcze nie ma. Nie używa plików `custom/*.json`, dzięki czemu `bench migrate` nie nadpisuje lokalnych zmian formularzy.
 
 Dodawane pola:
 
-- `Customer`: `REGON`, `KRS`, `PESEL`, `VAT Tax Status`,
+- `Customer`, `Supplier`: sekcja `Polish Tax Identifiers` na górze zakładki Ustawienia z polami `REGON`, `KRS`, `PESEL`, `VAT Tax Status`
+  (`REGON`/`KRS` są widoczne dla firm, a `PESEL` dla osób fizycznych),
+- `Company`: sekcja `Polish Tax Identifiers` pod NIP-em z polami `REGON`, `KRS`, `VAT Tax Status`,
 - `Sales Invoice`: `service_delivery_date`.
 
 ## Walidacje
@@ -42,7 +44,7 @@ Aplikacja obsługuje podstawowe wartości i walidacje faktury sprzedaży:
 
 ## Szablony i powiadomienia
 
-Szablony e-mail, szablony faktur i powiadomienia są tworzone przez patch `erpnextpl_community.erpnextpl_community.patches.create_community_documents`.
+Szablony e-mail, szablony faktur i powiadomienia są tworzone przy instalacji (hook `after_install`) oraz przez patch `erpnextpl_community.erpnextpl_community.patches.create_community_documents`.
 
 Patch działa według zasady:
 

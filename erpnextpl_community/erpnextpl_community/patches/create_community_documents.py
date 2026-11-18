@@ -3,30 +3,44 @@ from pathlib import Path
 
 import frappe
 
-CUSTOM_FIELDS = {
-	"Customer": [
+
+def polish_tax_id_fields(
+	insert_after: str, party_type_field: str | None = None, include_pesel: bool = True
+) -> list[dict]:
+	"""Polish tax identifier fields (REGON, KRS, PESEL, VAT Tax Status).
+
+	When ``party_type_field`` is given, REGON/KRS are shown only for non-individuals
+	and PESEL only for individuals (sole proprietors). ``include_pesel=False`` drops
+	PESEL entirely (e.g. Company, which identifies the taxpayer by NIP).
+	"""
+	company_only = individual_only = None
+	if party_type_field:
+		company_only = f"eval:doc.{party_type_field}!='Individual'"
+		individual_only = f"eval:doc.{party_type_field}=='Individual'"
+
+	fields = [
 		{
 			"fieldname": "polish_tax_ids_section",
 			"fieldtype": "Section Break",
-			"insert_after": "tax_withholding_category",
+			"insert_after": insert_after,
 			"label": "Polish Tax Identifiers",
 		},
 		{
-			"depends_on": "eval:doc.customer_type!='Individual'",
+			"depends_on": company_only,
 			"fieldname": "regon",
 			"fieldtype": "Data",
 			"insert_after": "polish_tax_ids_section",
 			"label": "REGON",
 		},
 		{
-			"depends_on": "eval:doc.customer_type!='Individual'",
+			"depends_on": company_only,
 			"fieldname": "krs",
 			"fieldtype": "Data",
 			"insert_after": "regon",
 			"label": "KRS",
 		},
 		{
-			"depends_on": "eval:doc.customer_type=='Individual'",
+			"depends_on": individual_only,
 			"fieldname": "pesel",
 			"fieldtype": "Data",
 			"insert_after": "krs",
@@ -35,7 +49,7 @@ CUSTOM_FIELDS = {
 		{
 			"fieldname": "column_break_polish_tax",
 			"fieldtype": "Column Break",
-			"insert_after": "pesel",
+			"insert_after": "pesel" if include_pesel else "krs",
 		},
 		{
 			"fieldname": "vat_tax_status",
@@ -43,7 +57,18 @@ CUSTOM_FIELDS = {
 			"insert_after": "column_break_polish_tax",
 			"label": "VAT Tax Status",
 		},
-	],
+	]
+
+	if not include_pesel:
+		fields = [field for field in fields if field["fieldname"] != "pesel"]
+
+	return [{key: value for key, value in field.items() if value is not None} for field in fields]
+
+
+CUSTOM_FIELDS = {
+	"Customer": polish_tax_id_fields("settings_tab", "customer_type"),
+	"Supplier": polish_tax_id_fields("settings_tab", "supplier_type"),
+	"Company": polish_tax_id_fields("date_of_establishment", include_pesel=False),
 	"Sales Invoice": [
 		{
 			"fieldname": "service_delivery_date",
@@ -96,11 +121,15 @@ def execute():
 	create_standard_documents()
 
 
-def create_custom_fields() -> None:
+def create_custom_fields(doctypes: list[str] | None = None) -> None:
+	"""Create missing Custom Fields, optionally only for the given doctypes."""
 	for doctype, fields in CUSTOM_FIELDS.items():
+		if doctypes is not None and doctype not in doctypes:
+			continue
+
 		for field in fields:
 			name = f"{doctype}-{field['fieldname']}"
-			if frappe.db.exists("Custom Field", name):
+			if frappe.db.exists("Custom Field", {"dt": doctype, "fieldname": field["fieldname"]}):
 				continue
 
 			doc = frappe.get_doc(
