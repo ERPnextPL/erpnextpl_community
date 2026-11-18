@@ -9,12 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **Polish tax identifiers on Supplier and Company** – the `Polish Tax Identifiers`
-  section (`REGON`, `KRS`, `PESEL`, `VAT Tax Status`) previously available only on
-  `Customer` is now also added to `Supplier` and `Company` (#4). On `Supplier`,
-  REGON/KRS are shown for companies and PESEL for individuals, same as on `Customer`.
-  On `Company` all fields are always visible (Company has no party type field).
+  section previously available only on `Customer` is now also added to `Supplier`
+  and `Company` (#4). On `Customer` and `Supplier` it holds `REGON`, `KRS`, `PESEL`
+  and `VAT Tax Status`: REGON/KRS are shown for companies and PESEL for individuals.
+  On `Company` it holds `REGON`, `KRS` and `VAT Tax Status` (no PESEL; the company
+  is identified by NIP).
+- **Setup on fresh installs** – new `after_install` hook creates the Custom Fields,
+  print formats, email templates, notifications (disabled) and Polish banks, and
+  enables the Polish language. Previously `bench install-app` only marked the
+  patches as executed, so fresh sites got none of these.
 
 ### Changed
+- The `Polish Tax Identifiers` section on `Customer` and `Supplier` is now at the
+  top of the Settings tab instead of after `tax_withholding_category`.
 - CI now tests against Frappe / ERPNext `version-16` (Python 3.14, Node 24,
   MariaDB 11.8) instead of `version-15`.
 
@@ -22,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New idempotent patch `add_polish_tax_fields_to_supplier_and_company` adds the
   fields on existing sites during `bench migrate`. Custom Fields that already exist
   (e.g. added manually) are not modified.
+- New patch `move_polish_tax_section_to_settings_tab` moves the existing section on
+  `Customer` to the Settings tab, only if it is still in its previous default place.
 
 ## [1.0.2] - 2026-06-24
 

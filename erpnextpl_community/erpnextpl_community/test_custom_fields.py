@@ -10,9 +10,12 @@ _frappe_stub.msgprint = MagicMock()
 _frappe_stub._ = lambda x: x
 sys.modules.setdefault("frappe", _frappe_stub)
 
+from erpnextpl_community import install
 from erpnextpl_community.erpnextpl_community.patches import (
 	add_polish_tax_fields_to_supplier_and_company,
 	create_community_documents,
+	create_polish_banks,
+	move_polish_tax_section_to_settings_tab,
 )
 from erpnextpl_community.erpnextpl_community.patches.create_community_documents import (
 	CUSTOM_FIELDS,
@@ -132,6 +135,61 @@ class TestAddPolishTaxFieldsPatch(unittest.TestCase):
 		frappe_mock.get_doc.assert_not_called()
 		checked = {call.args[1]["dt"] for call in frappe_mock.db.exists.call_args_list}
 		self.assertEqual(checked, {"Supplier", "Company"})
+
+
+class TestMovePolishTaxSectionPatch(unittest.TestCase):
+	def _run(self, existing):
+		"""existing: {doctype: Custom Field name or None} for sections at the old anchor."""
+		frappe_mock = MagicMock()
+		frappe_mock.db.get_value.side_effect = lambda _dt, filters: existing.get(filters["dt"])
+
+		with patch.object(move_polish_tax_section_to_settings_tab, "frappe", frappe_mock):
+			move_polish_tax_section_to_settings_tab.execute()
+
+		return frappe_mock
+
+	def test_moves_section_still_at_previous_anchor(self):
+		"""Sekcja w starym domyślnym miejscu trafia na górę zakładki Ustawienia."""
+		frappe_mock = self._run({"Customer": "Customer-polish_tax_ids_section"})
+
+		frappe_mock.db.set_value.assert_called_once_with(
+			"Custom Field", "Customer-polish_tax_ids_section", "insert_after", "settings_tab"
+		)
+		frappe_mock.clear_cache.assert_called_once_with(doctype="Customer")
+
+	def test_leaves_section_moved_by_admin(self):
+		"""Sekcja przeniesiona ręcznie (inne insert_after) nie jest ruszana."""
+		frappe_mock = self._run({})
+
+		frappe_mock.db.set_value.assert_not_called()
+
+	def test_only_looks_for_previous_anchor(self):
+		frappe_mock = self._run({})
+
+		for call in frappe_mock.db.get_value.call_args_list:
+			self.assertEqual(call.args[1]["insert_after"], "tax_withholding_category")
+		self.assertEqual(
+			{call.args[1]["dt"] for call in frappe_mock.db.get_value.call_args_list},
+			{"Customer", "Supplier"},
+		)
+
+
+class TestAfterInstall(unittest.TestCase):
+	def test_runs_all_setup_steps(self):
+		"""Świeża instalacja dostaje pola, dokumenty, banki i język polski."""
+		with (
+			patch.object(install, "create_custom_fields") as fields,
+			patch.object(install, "create_standard_documents") as documents,
+			patch.object(create_polish_banks, "execute") as banks,
+			patch.object(install, "frappe") as frappe_mock,
+		):
+			frappe_mock.db.exists.return_value = True
+			install.after_install()
+
+		fields.assert_called_once_with()
+		documents.assert_called_once_with()
+		banks.assert_called_once_with()
+		frappe_mock.db.set_value.assert_called_once_with("Language", "pl", "enabled", 1)
 
 
 if __name__ == "__main__":
