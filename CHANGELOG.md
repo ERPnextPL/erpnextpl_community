@@ -5,6 +5,24 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- **Setup on fresh installs** – `bench install-app erpnextpl_community` marks all
+  patches from `patches.txt` as completed without running them
+  (`frappe.installer.set_all_patches_as_completed`), so new sites were missing all
+  Custom Fields (`Customer-regon` etc.), both Email Templates and the Polish banks
+  list (Print Formats and Notifications were still created by the standard module
+  sync). A new `after_install` hook
+  (`erpnextpl_community/install.py`) now runs the setup patches
+  `create_community_documents` and `create_polish_banks` directly. They are
+  idempotent, so existing records are not overwritten.
+
+### Migration notes
+- Sites where the app is already installed with missing setup (a fresh install
+  of 1.0.x) can be fixed with
+  `bench --site $SITE_NAME execute erpnextpl_community.install.after_install`.
+
 ## [1.0.2] - 2026-06-24
 
 ### Added

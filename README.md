@@ -13,7 +13,7 @@ ERPNextPL Community to lekka aplikacja dla Frappe / ERPNext. Zakres tej edycji o
 
 ## Custom Fields
 
-Aplikacja dodaje pola przez patch migracyjny, tylko jeśli ich jeszcze nie ma. Nie używa plików `custom/*.json`, dzięki czemu `bench migrate` nie nadpisuje lokalnych zmian formularzy.
+Aplikacja dodaje pola przez patch migracyjny (uruchamiany też przy instalacji), tylko jeśli ich jeszcze nie ma. Nie używa plików `custom/*.json`, dzięki czemu `bench migrate` nie nadpisuje lokalnych zmian formularzy.
 
 Dodawane pola:
 
@@ -60,6 +60,7 @@ Szablony e-mail w tej aplikacji mają polskie nazwy:
 ## Najważniejsze pliki
 
 - `erpnextpl_community/hooks.py` - aktywne hooki aplikacji,
+- `erpnextpl_community/install.py` - hook `after_install` uruchamiający patche konfiguracyjne przy instalacji,
 - `erpnextpl_community/customer.py` - walidacja NIP klienta,
 - `erpnextpl_community/sales_invoice.py` - walidacje i wartości domyślne faktury sprzedaży,
 - `erpnextpl_community/public/js/erpnextpl_fixes.js` - komunikaty podstawowych pól w UI,
@@ -71,8 +72,21 @@ Szablony e-mail w tej aplikacji mają polskie nazwy:
 ```bash
 cd $PATH_TO_YOUR_BENCH
 bench get-app $URL_OF_THIS_REPO --branch develop
-bench install-app erpnextpl_community
+bench --site $SITE_NAME install-app erpnextpl_community
+```
+
+Podczas instalacji hook `after_install` (`erpnextpl_community/install.py`) uruchamia patche konfiguracyjne (`create_community_documents`, `create_polish_banks`), które tworzą pola, szablony, powiadomienia i listę banków. Jest to potrzebne, bo `bench install-app` oznacza wszystkie patche z `patches.txt` jako wykonane, ale ich nie uruchamia.
+
+Przy aktualizacji aplikacji uruchom:
+
+```bash
 bench --site $SITE_NAME migrate
+```
+
+Jeśli aplikacja została zainstalowana w wersji bez hooka `after_install` (np. 1.0.2) i brakuje pól lub szablonów, uruchom konfigurację ręcznie (operacja jest bezpieczna, bo patche nie nadpisują istniejących danych):
+
+```bash
+bench --site $SITE_NAME execute erpnextpl_community.install.after_install
 ```
 
 ## Rozwój
