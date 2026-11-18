@@ -30,7 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   fields on existing sites during `bench migrate`. Custom Fields that already exist
   (e.g. added manually) are not modified.
 - New patch `move_polish_tax_section_to_settings_tab` moves the existing section on
-  `Customer` to the Settings tab, only if it is still in its previous default place.
+  `Customer` and `Supplier` to the Settings tab, only if it is still in its previous
+  default place.
 
 ## [1.0.2] - 2026-06-24
 
