@@ -17,7 +17,8 @@ Aplikacja dodaje pola przez patch migracyjny, tylko jeśli ich jeszcze nie ma. N
 
 Dodawane pola:
 
-- `Customer`: `REGON`, `KRS`, `PESEL`, `VAT Tax Status`,
+- `Customer`, `Supplier`, `Company`: sekcja `Polish Tax Identifiers` z polami `REGON`, `KRS`, `PESEL`, `VAT Tax Status`
+  (dla `Customer` i `Supplier` pola `REGON`/`KRS` są widoczne dla firm, a `PESEL` dla osób fizycznych),
 - `Sales Invoice`: `service_delivery_date`.
 
 ## Walidacje

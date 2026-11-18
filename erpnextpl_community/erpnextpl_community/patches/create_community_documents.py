@@ -3,30 +3,41 @@ from pathlib import Path
 
 import frappe
 
-CUSTOM_FIELDS = {
-	"Customer": [
+
+def polish_tax_id_fields(insert_after: str, party_type_field: str | None = None) -> list[dict]:
+	"""Polish tax identifier fields (REGON, KRS, PESEL, VAT Tax Status).
+
+	When ``party_type_field`` is given, REGON/KRS are shown only for non-individuals
+	and PESEL only for individuals (sole proprietors).
+	"""
+	company_only = individual_only = None
+	if party_type_field:
+		company_only = f"eval:doc.{party_type_field}!='Individual'"
+		individual_only = f"eval:doc.{party_type_field}=='Individual'"
+
+	fields = [
 		{
 			"fieldname": "polish_tax_ids_section",
 			"fieldtype": "Section Break",
-			"insert_after": "tax_withholding_category",
+			"insert_after": insert_after,
 			"label": "Polish Tax Identifiers",
 		},
 		{
-			"depends_on": "eval:doc.customer_type!='Individual'",
+			"depends_on": company_only,
 			"fieldname": "regon",
 			"fieldtype": "Data",
 			"insert_after": "polish_tax_ids_section",
 			"label": "REGON",
 		},
 		{
-			"depends_on": "eval:doc.customer_type!='Individual'",
+			"depends_on": company_only,
 			"fieldname": "krs",
 			"fieldtype": "Data",
 			"insert_after": "regon",
 			"label": "KRS",
 		},
 		{
-			"depends_on": "eval:doc.customer_type=='Individual'",
+			"depends_on": individual_only,
 			"fieldname": "pesel",
 			"fieldtype": "Data",
 			"insert_after": "krs",
@@ -43,7 +54,15 @@ CUSTOM_FIELDS = {
 			"insert_after": "column_break_polish_tax",
 			"label": "VAT Tax Status",
 		},
-	],
+	]
+
+	return [{key: value for key, value in field.items() if value is not None} for field in fields]
+
+
+CUSTOM_FIELDS = {
+	"Customer": polish_tax_id_fields("tax_withholding_category", "customer_type"),
+	"Supplier": polish_tax_id_fields("tax_withholding_category", "supplier_type"),
+	"Company": polish_tax_id_fields("date_of_establishment"),
 	"Sales Invoice": [
 		{
 			"fieldname": "service_delivery_date",

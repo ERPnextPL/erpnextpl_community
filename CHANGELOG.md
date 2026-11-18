@@ -5,6 +5,19 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **Polish tax identifiers on Supplier and Company** – the `Polish Tax Identifiers`
+  section (`REGON`, `KRS`, `PESEL`, `VAT Tax Status`) previously available only on
+  `Customer` is now also added to `Supplier` and `Company` (#4). On `Supplier`,
+  REGON/KRS are shown for companies and PESEL for individuals, same as on `Customer`.
+
+### Migration notes
+- New idempotent patch `add_polish_tax_fields_to_supplier_and_company` adds the
+  fields on existing sites during `bench migrate`. Custom Fields that already exist
+  (e.g. added manually) are not modified.
+
 ## [1.0.2] - 2026-06-24
 
 ### Added
