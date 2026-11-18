@@ -4,11 +4,14 @@ from pathlib import Path
 import frappe
 
 
-def polish_tax_id_fields(insert_after: str, party_type_field: str | None = None) -> list[dict]:
+def polish_tax_id_fields(
+	insert_after: str, party_type_field: str | None = None, include_pesel: bool = True
+) -> list[dict]:
 	"""Polish tax identifier fields (REGON, KRS, PESEL, VAT Tax Status).
 
 	When ``party_type_field`` is given, REGON/KRS are shown only for non-individuals
-	and PESEL only for individuals (sole proprietors).
+	and PESEL only for individuals (sole proprietors). ``include_pesel=False`` drops
+	PESEL entirely (e.g. Company, which identifies the taxpayer by NIP).
 	"""
 	company_only = individual_only = None
 	if party_type_field:
@@ -46,7 +49,7 @@ def polish_tax_id_fields(insert_after: str, party_type_field: str | None = None)
 		{
 			"fieldname": "column_break_polish_tax",
 			"fieldtype": "Column Break",
-			"insert_after": "pesel",
+			"insert_after": "pesel" if include_pesel else "krs",
 		},
 		{
 			"fieldname": "vat_tax_status",
@@ -56,13 +59,16 @@ def polish_tax_id_fields(insert_after: str, party_type_field: str | None = None)
 		},
 	]
 
+	if not include_pesel:
+		fields = [field for field in fields if field["fieldname"] != "pesel"]
+
 	return [{key: value for key, value in field.items() if value is not None} for field in fields]
 
 
 CUSTOM_FIELDS = {
-	"Customer": polish_tax_id_fields("tax_withholding_category", "customer_type"),
-	"Supplier": polish_tax_id_fields("tax_withholding_category", "supplier_type"),
-	"Company": polish_tax_id_fields("date_of_establishment"),
+	"Customer": polish_tax_id_fields("settings_tab", "customer_type"),
+	"Supplier": polish_tax_id_fields("settings_tab", "supplier_type"),
+	"Company": polish_tax_id_fields("date_of_establishment", include_pesel=False),
 	"Sales Invoice": [
 		{
 			"fieldname": "service_delivery_date",

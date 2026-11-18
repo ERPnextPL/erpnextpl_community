@@ -69,7 +69,7 @@ app_include_js = "/assets/erpnextpl_community/js/erpnextpl_fixes.js"
 # ------------
 
 # before_install = "erpnextpl_community.install.before_install"
-# after_install = "erpnextpl_community.install.after_install"
+after_install = "erpnextpl_community.install.after_install"
 
 # Uninstallation
 # ------------

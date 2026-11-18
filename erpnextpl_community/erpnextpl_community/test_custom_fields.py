@@ -26,6 +26,7 @@ POLISH_TAX_FIELDNAMES = [
 	"column_break_polish_tax",
 	"vat_tax_status",
 ]
+COMPANY_TAX_FIELDNAMES = [f for f in POLISH_TAX_FIELDNAMES if f != "pesel"]
 
 
 def _fields_by_name(doctype):
@@ -34,11 +35,21 @@ def _fields_by_name(doctype):
 
 class TestPolishTaxFields(unittest.TestCase):
 	def test_all_parties_have_polish_tax_fields(self):
-		"""Customer, Supplier i Company mają ten sam zestaw pól podatkowych."""
-		for doctype in ("Customer", "Supplier", "Company"):
+		"""Customer i Supplier mają pełny zestaw pól, Company bez PESEL."""
+		expected = {
+			"Customer": POLISH_TAX_FIELDNAMES,
+			"Supplier": POLISH_TAX_FIELDNAMES,
+			"Company": COMPANY_TAX_FIELDNAMES,
+		}
+		for doctype, fieldnames_expected in expected.items():
 			with self.subTest(doctype=doctype):
 				fieldnames = [field["fieldname"] for field in CUSTOM_FIELDS[doctype]]
-				self.assertEqual(fieldnames, POLISH_TAX_FIELDNAMES)
+				self.assertEqual(fieldnames, fieldnames_expected)
+
+	def test_company_has_no_pesel(self):
+		"""Company identyfikuje podatnika NIP-em — PESEL nie jest potrzebny."""
+		self.assertNotIn("pesel", _fields_by_name("Company"))
+		self.assertEqual(_fields_by_name("Company")["column_break_polish_tax"]["insert_after"], "krs")
 
 	def test_field_types_and_labels(self):
 		"""Typy pól i etykiety są takie same dla wszystkich DocType."""
@@ -53,6 +64,8 @@ class TestPolishTaxFields(unittest.TestCase):
 		for doctype in ("Customer", "Supplier", "Company"):
 			fields = _fields_by_name(doctype)
 			for fieldname, (fieldtype, label) in expected.items():
+				if fieldname not in fields:
+					continue
 				with self.subTest(doctype=doctype, field=fieldname):
 					self.assertEqual(fields[fieldname]["fieldtype"], fieldtype)
 					self.assertEqual(fields[fieldname].get("label"), label)
@@ -60,8 +73,8 @@ class TestPolishTaxFields(unittest.TestCase):
 	def test_section_placement(self):
 		"""Sekcja jest wstawiana w odpowiednim miejscu formularza."""
 		expected = {
-			"Customer": "tax_withholding_category",
-			"Supplier": "tax_withholding_category",
+			"Customer": "settings_tab",
+			"Supplier": "settings_tab",
 			"Company": "date_of_establishment",
 		}
 		for doctype, insert_after in expected.items():
