@@ -108,6 +108,18 @@ class TestAddPolishTaxFieldsPatch(unittest.TestCase):
 		created_doctypes = {call.args[0]["dt"] for call in frappe_mock.get_doc.call_args_list}
 		self.assertEqual(created_doctypes, {"Supplier", "Company"})
 
+	def test_patch_skips_existing_fields(self):
+		"""Istniejące pola nie są tworzone ponownie ani nadpisywane (idempotentność)."""
+		frappe_mock = MagicMock()
+		frappe_mock.db.exists.return_value = True
+
+		with patch.object(create_community_documents, "frappe", frappe_mock):
+			add_polish_tax_fields_to_supplier_and_company.execute()
+
+		frappe_mock.get_doc.assert_not_called()
+		checked = {call.args[1]["dt"] for call in frappe_mock.db.exists.call_args_list}
+		self.assertEqual(checked, {"Supplier", "Company"})
+
 
 if __name__ == "__main__":
 	unittest.main()
