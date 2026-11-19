@@ -187,7 +187,7 @@ class TestAfterInstall(unittest.TestCase):
 			install.after_install()
 
 		fields.assert_called_once_with()
-		documents.assert_called_once_with()
+		documents.assert_called_once_with(migrate_existing=False)
 		banks.assert_called_once_with()
 		frappe_mock.db.set_value.assert_called_once_with("Language", "pl", "enabled", 1)
 
