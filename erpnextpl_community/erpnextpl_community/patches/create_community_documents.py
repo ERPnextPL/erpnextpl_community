@@ -85,6 +85,7 @@ STANDARD_DOCUMENTS = [
 	"erpnextpl_community/print_format/faktura_vat/faktura_vat.json",
 	"erpnextpl_community/print_format/wydanie_zamówienia/wydanie_zamówienia.json",
 	"erpnextpl_community/print_format/pasek_wynagrodzenia_timesheet/pasek_wynagrodzenia_timesheet.json",
+	"erpnextpl_community/print_format/pasek_wynagrodzenia_timesheet_wkhtmltopdf/pasek_wynagrodzenia_timesheet_wkhtmltopdf.json",
 	"erpnextpl_community/email_template/dunning_reminder/dunning_reminder.json",
 	"erpnextpl_community/email_template/sales_invoice_notification/sales_invoice_notification.json",
 	"erpnextpl_community/notification/delayed_deliveries_of_to_customers/delayed_deliveries_of_to_customers.json",
@@ -100,6 +101,12 @@ STANDARD_DOCUMENTS = [
 	"erpnextpl_community/notification/sales_order_ready_for_fulfillment/sales_order_ready_for_fulfillment.json",
 	"erpnextpl_community/notification/todo_assigned/todo_assigned.json",
 ]
+
+# Documents that need a newer Frappe than the minimum supported one. The Chrome PDF
+# generator exists only in Frappe 16+; Frappe 15 uses the wkhtmltopdf variant instead.
+MIN_FRAPPE_MAJOR_VERSION = {
+	"erpnextpl_community/print_format/pasek_wynagrodzenia_timesheet/pasek_wynagrodzenia_timesheet.json": 16,
+}
 
 FAKTURA_VAT_HTML_REPLACEMENTS = (
 	(
@@ -148,7 +155,12 @@ def create_custom_fields(doctypes: list[str] | None = None) -> None:
 def create_standard_documents(migrate_existing: bool = True) -> None:
 	app_path = Path(frappe.get_app_path("erpnextpl_community"))
 
+	frappe_major_version = int(frappe.__version__.split(".")[0])
+
 	for relative_path in STANDARD_DOCUMENTS:
+		if frappe_major_version < MIN_FRAPPE_MAJOR_VERSION.get(relative_path, 0):
+			continue
+
 		data = json.loads((app_path / relative_path).read_text(encoding="utf-8"))
 
 		if frappe.db.exists(data["doctype"], data["name"]):

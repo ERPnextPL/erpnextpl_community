@@ -1,7 +1,9 @@
+import json
 import sys
 import types
 import unittest
 from itertools import pairwise
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 # Frappe nie jest dostępne poza środowiskiem bench — tworzymy stub modułu
@@ -190,6 +192,41 @@ class TestAfterInstall(unittest.TestCase):
 		documents.assert_called_once_with(migrate_existing=False)
 		banks.assert_called_once_with()
 		frappe_mock.db.set_value.assert_called_once_with("Language", "pl", "enabled", 1)
+
+
+class TestStandardDocumentsByFrappeVersion(unittest.TestCase):
+	CHROME = "Pasek Wynagrodzenia - Timesheet"
+	WKHTML = "Pasek Wynagrodzenia - Timesheet (wkhtmltopdf)"
+
+	def _checked_names(self, version):
+		app_path = Path(create_community_documents.__file__).parents[2]
+		with patch.object(create_community_documents, "frappe") as frappe_mock:
+			frappe_mock.__version__ = version
+			frappe_mock.get_app_path.return_value = str(app_path)
+			frappe_mock.db.exists.return_value = True
+			create_community_documents.create_standard_documents(migrate_existing=False)
+		return [call.args[1] for call in frappe_mock.db.exists.call_args_list]
+
+	def test_frappe_15_skips_chrome_print_format(self):
+		names = self._checked_names("15.80.0")
+		self.assertIn(self.WKHTML, names)
+		self.assertNotIn(self.CHROME, names)
+
+	def test_frappe_16_installs_both_print_formats(self):
+		names = self._checked_names("16.0.0")
+		self.assertIn(self.WKHTML, names)
+		self.assertIn(self.CHROME, names)
+
+	def test_wkhtmltopdf_format_has_no_unsupported_css(self):
+		path = (
+			Path(create_community_documents.__file__).parents[1]
+			/ "print_format/pasek_wynagrodzenia_timesheet_wkhtmltopdf"
+			/ "pasek_wynagrodzenia_timesheet_wkhtmltopdf.json"
+		)
+		data = json.loads(path.read_text(encoding="utf-8"))
+		self.assertEqual(data["pdf_generator"], "wkhtmltopdf")
+		for unsupported in ("display: flex", "display: grid", "linear-gradient"):
+			self.assertNotIn(unsupported, data["html"])
 
 
 if __name__ == "__main__":
