@@ -102,10 +102,13 @@ STANDARD_DOCUMENTS = [
 	"erpnextpl_community/notification/todo_assigned/todo_assigned.json",
 ]
 
-# Documents that need a newer Frappe than the minimum supported one. The Chrome PDF
-# generator exists only in Frappe 16+; Frappe 15 uses the wkhtmltopdf variant instead.
+# Version limits for documents tied to a PDF renderer. The Chrome PDF generator exists
+# only in Frappe 16+; wkhtmltopdf is used on Frappe 15 and 16 and is gone in Frappe 17+.
 MIN_FRAPPE_MAJOR_VERSION = {
 	"erpnextpl_community/print_format/pasek_wynagrodzenia_timesheet/pasek_wynagrodzenia_timesheet.json": 16,
+}
+MAX_FRAPPE_MAJOR_VERSION = {
+	"erpnextpl_community/print_format/pasek_wynagrodzenia_timesheet_wkhtmltopdf/pasek_wynagrodzenia_timesheet_wkhtmltopdf.json": 16,
 }
 
 FAKTURA_VAT_HTML_REPLACEMENTS = (
@@ -158,10 +161,18 @@ def create_standard_documents(migrate_existing: bool = True) -> None:
 	frappe_major_version = int(frappe.__version__.split(".")[0])
 
 	for relative_path in STANDARD_DOCUMENTS:
-		if frappe_major_version < MIN_FRAPPE_MAJOR_VERSION.get(relative_path, 0):
-			continue
-
 		data = json.loads((app_path / relative_path).read_text(encoding="utf-8"))
+
+		if not (
+			MIN_FRAPPE_MAJOR_VERSION.get(relative_path, 0)
+			<= frappe_major_version
+			<= MAX_FRAPPE_MAJOR_VERSION.get(relative_path, frappe_major_version)
+		):
+			# Not supported here; disable a copy left by an earlier install or sync so
+			# users cannot pick a format whose PDF generator is unavailable.
+			if frappe.db.exists(data["doctype"], data["name"]):
+				frappe.db.set_value(data["doctype"], data["name"], "disabled", 1)
+			continue
 
 		if frappe.db.exists(data["doctype"], data["name"]):
 			if migrate_existing and data["doctype"] == "Print Format" and data["name"] == "Faktura VAT":

@@ -47,7 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Salary slip print format** – new `Pasek Wynagrodzenia - Timesheet` print
   format for `Salary Slip` (Jinja, default language `pl`). On Frappe 16+ it uses
   the Chrome PDF generator; `Pasek Wynagrodzenia - Timesheet (wkhtmltopdf)` is a
-  table-based variant installed on every version (the only one on Frappe 15).
+  table-based variant installed on Frappe 15 and 16 (the only one on Frappe 15).
+  A format that does not fit the running Frappe version is disabled if it already exists.
 
 ### Changed
 - Updated Polish translations in `translations/pl.csv` (payment entry settings,
