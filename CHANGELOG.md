@@ -26,8 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (v16: Python 3.14, Node 24, MariaDB 11.8).
 
 ### Migration notes
-- New idempotent patch `create_salary_slip_print_format` adds the `Pasek
-  Wynagrodzenia - Timesheet` print format on existing sites.
+- New idempotent patch `create_salary_slip_print_format` adds the salary slip print
+  formats on existing sites: `Pasek Wynagrodzenia - Timesheet` (Chrome PDF
+  generator, Frappe 16+ only) and `Pasek Wynagrodzenia - Timesheet (wkhtmltopdf)`
+  (table layout, works on Frappe 15 and 16).
 - The `remove_pro_artifacts` cleanup patch is kept under the new module path.
 - New idempotent patch `add_polish_tax_fields_to_supplier_and_company` adds the
   fields on existing sites during `bench migrate`. Custom Fields that already exist
@@ -43,7 +45,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   creates the 15 largest Polish banks (name, website, SWIFT/BIC code). Existing
   `Bank` records are never overwritten.
 - **Salary slip print format** – new `Pasek Wynagrodzenia - Timesheet` print
-  format for `Salary Slip` (Jinja, default language `pl`).
+  format for `Salary Slip` (Jinja, default language `pl`). On Frappe 16+ it uses
+  the Chrome PDF generator; `Pasek Wynagrodzenia - Timesheet (wkhtmltopdf)` is a
+  table-based variant installed on Frappe 15 and 16 (the only one on Frappe 15).
+  A format that does not fit the running Frappe version is disabled if it already exists.
 
 ### Changed
 - Updated Polish translations in `translations/pl.csv` (payment entry settings,
@@ -55,8 +60,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Migration notes
 - Run `bench migrate` after upgrading to apply the new patches.
 - No breaking changes for user data — patches are idempotent and do not
-  overwrite existing records wholesale. The only exception is a targeted
-  migration of legacy snippets in an existing `Faktura VAT` print format.
+  overwrite existing records wholesale. Deliberate exceptions: a targeted
+  migration of legacy snippets in an existing `Faktura VAT` print format, and the
+  `remove_pro_artifacts` cleanup patch, which force-deletes leftover Pro artifacts
+  (the `Sales invoice issued in KSeF` notification, the `MT940 Profile` and
+  `ERPNextPL Settings` DocTypes, the `Bank-mt940_profile` Custom Field and the
+  `Sales Order` `disable_rounded_total` default Property Setter).
 
 ## [1.0.1]
 - Path and CI fixes, README updates.
