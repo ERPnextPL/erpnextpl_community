@@ -13,11 +13,13 @@ ERPNextPL Community to lekka aplikacja dla Frappe / ERPNext. Zakres tej edycji o
 
 ## Custom Fields
 
-Aplikacja dodaje pola przez patch migracyjny, tylko jeśli ich jeszcze nie ma. Nie używa plików `custom/*.json`, dzięki czemu `bench migrate` nie nadpisuje lokalnych zmian formularzy.
+Aplikacja dodaje pola przy instalacji (hook `after_install`) i przez patche migracyjne, tylko jeśli ich jeszcze nie ma. Nie używa plików `custom/*.json`, dzięki czemu `bench migrate` nie nadpisuje lokalnych zmian formularzy.
 
 Dodawane pola:
 
-- `Customer`: `REGON`, `KRS`, `PESEL`, `VAT Tax Status`,
+- `Customer`, `Supplier`: sekcja `Polish Tax Identifiers` na górze zakładki Ustawienia z polami `REGON`, `KRS`, `PESEL`, `VAT Tax Status`
+  (`REGON`/`KRS` są widoczne dla firm, a `PESEL` dla osób fizycznych),
+- `Company`: sekcja `Polish Tax Identifiers` pod NIP-em z polami `REGON`, `KRS`, `VAT Tax Status`,
 - `Sales Invoice`: `service_delivery_date`.
 
 ## Walidacje
@@ -42,7 +44,7 @@ Aplikacja obsługuje podstawowe wartości i walidacje faktury sprzedaży:
 
 ## Szablony i powiadomienia
 
-Szablony e-mail, szablony faktur i powiadomienia są tworzone przez patch `erpnextpl_community.erpnextpl.patches.create_community_documents`.
+Szablony e-mail, szablony faktur i powiadomienia są tworzone przy instalacji (hook `after_install`) oraz przez patch `erpnextpl_community.erpnextpl_community.patches.create_community_documents`.
 
 Patch działa według zasady:
 
@@ -63,8 +65,8 @@ Szablony e-mail w tej aplikacji mają polskie nazwy:
 - `erpnextpl_community/customer.py` - walidacja NIP klienta,
 - `erpnextpl_community/sales_invoice.py` - walidacje i wartości domyślne faktury sprzedaży,
 - `erpnextpl_community/public/js/erpnextpl_fixes.js` - komunikaty podstawowych pól w UI,
-- `erpnextpl_community/erpnextpl/patches/create_community_documents.py` - tworzenie pól, szablonów i powiadomień,
-- `erpnextpl_community/erpnextpl/patches/remove_pro_artifacts.py` - sprzątanie artefaktów spoza zakresu Community.
+- `erpnextpl_community/erpnextpl_community/patches/create_community_documents.py` - tworzenie pól, szablonów i powiadomień,
+- `erpnextpl_community/erpnextpl_community/patches/create_polish_banks.py` - tworzenie listy polskich banków.
 
 ## Instalacja
 
@@ -86,7 +88,6 @@ Przed zmianami w aktywnym zakresie warto uruchomić testy dotyczące:
 ## TODO
 
 - faktura proforma,
-- lista banków polskich + swift,
 - lista województw w Polsce.
 
 ## Privacy
