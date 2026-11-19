@@ -10,7 +10,7 @@ POLISH_BANKS = [
 	("Bank Millennium SA", "https://www.bankmillennium.pl", "BIGBPLPW"),
 	("Alior Bank SA", "https://www.aliorbank.pl", "ALBPPLPW"),
 	("BNP Paribas Bank Polska SA", "https://www.bnpparibas.pl", "PPABPLPK"),
-	("Nest Bank SA", "https://www.nestbank.pl", "NESBPLP2"),
+	("Nest Bank SA", "https://www.nestbank.pl", "NESBPLPW"),
 	("Citi Handlowy SA", "https://www.citihandlowy.pl", "CITIPLPX"),
 	("Credit Agricole Bank Polska SA", "https://www.credit-agricole.pl", "AGRIPLPR"),
 	("Bank Ochrony Środowiska SA", "https://www.bosbank.pl", "EBOSPLPW"),
@@ -22,12 +22,14 @@ POLISH_BANKS = [
 
 def execute():
 	for bank_name, website, swift in POLISH_BANKS:
-		if not frappe.db.exists("Bank", bank_name):
-			frappe.get_doc(
-				{
-					"doctype": "Bank",
-					"bank_name": bank_name,
-					"website": website,
-					"swift_number": swift,
-				}
-			).insert(ignore_permissions=True, ignore_mandatory=True)
+		if frappe.db.exists("Bank", bank_name) or frappe.db.exists("Bank", {"swift_number": swift}):
+			continue
+
+		frappe.get_doc(
+			{
+				"doctype": "Bank",
+				"bank_name": bank_name,
+				"website": website,
+				"swift_number": swift,
+			}
+		).insert(ignore_permissions=True, ignore_mandatory=True)

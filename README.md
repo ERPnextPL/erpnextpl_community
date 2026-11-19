@@ -88,7 +88,6 @@ Przed zmianami w aktywnym zakresie warto uruchomić testy dotyczące:
 ## TODO
 
 - faktura proforma,
-- lista banków polskich + swift,
 - lista województw w Polsce.
 
 ## Privacy

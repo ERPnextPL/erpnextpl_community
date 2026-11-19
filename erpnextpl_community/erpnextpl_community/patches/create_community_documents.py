@@ -84,6 +84,7 @@ CUSTOM_FIELDS = {
 STANDARD_DOCUMENTS = [
 	"erpnextpl_community/print_format/faktura_vat/faktura_vat.json",
 	"erpnextpl_community/print_format/wydanie_zamówienia/wydanie_zamówienia.json",
+	"erpnextpl_community/print_format/pasek_wynagrodzenia_timesheet/pasek_wynagrodzenia_timesheet.json",
 	"erpnextpl_community/email_template/dunning_reminder/dunning_reminder.json",
 	"erpnextpl_community/email_template/sales_invoice_notification/sales_invoice_notification.json",
 	"erpnextpl_community/notification/delayed_deliveries_of_to_customers/delayed_deliveries_of_to_customers.json",
@@ -144,14 +145,14 @@ def create_custom_fields(doctypes: list[str] | None = None) -> None:
 			doc.insert(ignore_permissions=True, ignore_mandatory=True)
 
 
-def create_standard_documents() -> None:
+def create_standard_documents(migrate_existing: bool = True) -> None:
 	app_path = Path(frappe.get_app_path("erpnextpl_community"))
 
 	for relative_path in STANDARD_DOCUMENTS:
 		data = json.loads((app_path / relative_path).read_text(encoding="utf-8"))
 
 		if frappe.db.exists(data["doctype"], data["name"]):
-			if data["doctype"] == "Print Format" and data["name"] == "Faktura VAT":
+			if migrate_existing and data["doctype"] == "Print Format" and data["name"] == "Faktura VAT":
 				migrate_faktura_vat_html(data["name"])
 			continue
 

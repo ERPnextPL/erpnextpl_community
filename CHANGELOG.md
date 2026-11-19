@@ -22,10 +22,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - The `Polish Tax Identifiers` section on `Customer` and `Supplier` is now at the
   top of the Settings tab instead of after `tax_withholding_category`.
-- CI now tests against Frappe / ERPNext `version-16` (Python 3.14, Node 24,
-  MariaDB 11.8) instead of `version-15`.
+- CI now tests against Frappe / ERPNext `version-15` and `version-16`
+  (v16: Python 3.14, Node 24, MariaDB 11.8).
 
 ### Migration notes
+- New idempotent patch `create_salary_slip_print_format` adds the `Pasek
+  Wynagrodzenia - Timesheet` print format on existing sites.
+- The `remove_pro_artifacts` cleanup patch is kept under the new module path.
 - New idempotent patch `add_polish_tax_fields_to_supplier_and_company` adds the
   fields on existing sites during `bench migrate`. Custom Fields that already exist
   (e.g. added manually) are not modified.
@@ -49,14 +52,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `erpnextpl_community/`; `modules.txt` updated to `ERPNextPL Community`; patch
   paths in `patches.txt` and references in `README.md` updated accordingly.
 
-### Removed
-- Dropped the unused `remove_pro_artifacts.py` patch (a Pro-variant artifact,
-  out of scope for the Community edition).
-
 ### Migration notes
 - Run `bench migrate` after upgrading to apply the new patches.
 - No breaking changes for user data — patches are idempotent and do not
-  overwrite existing records.
+  overwrite existing records wholesale. The only exception is a targeted
+  migration of legacy snippets in an existing `Faktura VAT` print format.
 
 ## [1.0.1]
 - Path and CI fixes, README updates.

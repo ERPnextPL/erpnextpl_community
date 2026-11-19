@@ -12,7 +12,7 @@ def after_install():
 	# run the (idempotent) setup steps here to give fresh sites the full set:
 	# Custom Fields, print formats, email templates, notifications and banks.
 	create_custom_fields()
-	create_standard_documents()
+	create_standard_documents(migrate_existing=False)
 	create_polish_banks.execute()
 	enable_polish_language()
 
